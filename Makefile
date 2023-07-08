@@ -76,4 +76,5 @@ devops-datasource: init
 
 # Run acceptance tests
 testacc:
-	TF_ACC=1 TF_LOG=INFO go test ./... -v $(TESTARGS) -timeout 120m
+	# TF_ACC=1 TF_LOG=INFO go test ./... -v $(TESTARGS) -timeout 120m
+	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 120m

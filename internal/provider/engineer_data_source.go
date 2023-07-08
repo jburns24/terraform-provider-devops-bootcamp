@@ -50,6 +50,9 @@ func (d *EngineerDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				MarkdownDescription: "Example identifier",
 				Computed:            true,
 			},
+			"last_updated": schema.StringAttribute{
+				Computed: true,
+			},
 		},
 	}
 }
