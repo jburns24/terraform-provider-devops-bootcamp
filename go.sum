@@ -92,6 +92,8 @@ github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.1 h1:G9WAfb8LHeCxu7Ae8nc1agZl
 github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.1/go.mod h1:xcOSYlRVdPLmDUoqPhO9fiO/YCN/l6MGYeTzGt5jgkQ=
 github.com/hashicorp/terraform-plugin-testing v1.3.0 h1:4Pn8fSspPCRUc5zRGPNZYc00VhQmQPEH6y6Pv4e/42M=
 github.com/hashicorp/terraform-plugin-testing v1.3.0/go.mod h1:mGOfGFTVIhP9buGPZyDQhmZFIO/Ig8E0Fo694UACr64=
+github.com/hashicorp/terraform-provider-scaffolding-framework v0.0.0-20230704122022-c699ebedfd6a h1:wY/zWw/BHcPc9Eb4mbdhGnEPwKGtJPH97aZ7pxWCJ7Y=
+github.com/hashicorp/terraform-provider-scaffolding-framework v0.0.0-20230704122022-c699ebedfd6a/go.mod h1:jytzBZA8yzcpIigqtd3ctW5GpLDZUNd6nKlqqr+o96g=
 github.com/hashicorp/terraform-registry-address v0.2.1 h1:QuTf6oJ1+WSflJw6WYOHhLgwUiQ0FrROpHPYFtwTYWM=
 github.com/hashicorp/terraform-registry-address v0.2.1/go.mod h1:BSE9fIFzp0qWsJUUyGquo4ldV9k2n+psif6NYkBRS3Y=
 github.com/hashicorp/terraform-svchost v0.1.1 h1:EZZimZ1GxdqFRinZ1tpJwVxxt49xc/S52uzrw4x0jKQ=
@@ -113,6 +115,8 @@ github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
 github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0SNc=
+github.com/liatrio/devops-bootcamp/examples/ch6/devops-resources v0.0.0-20230601211626-d91eb88bfc94 h1:Vz4783huCHtYlyJZyajb3TTYSznMqOIOp7VTxJRKPUk=
+github.com/liatrio/devops-bootcamp/examples/ch6/devops-resources v0.0.0-20230601211626-d91eb88bfc94/go.mod h1:Wy8YNDvnY+iVDU2soHwZQFTv0NQ1sBoJQVTe44z4wF0=
 github.com/mattn/go-colorable v0.0.9/go.mod h1:9vuHe8Xs5qXnSaW/c/ABM9alt+Vo+STaOChaDxuIBZU=
 github.com/mattn/go-colorable v0.1.9/go.mod h1:u6P/XSegPjTcexA+o6vUJrdnUu04hMope9wVRipJSqc=
 github.com/mattn/go-colorable v0.1.12/go.mod h1:u5H1YNBxpqRaxsYJYSkiCWKzEfiAb1Gb520KVy5xxl4=
