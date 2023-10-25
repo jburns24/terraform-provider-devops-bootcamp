@@ -78,12 +78,14 @@ func (p *DevOpsBootcampProvider) Configure(ctx context.Context, req provider.Con
 func (p *DevOpsBootcampProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewEngineerResource,
+		NewDevResource,
 	}
 }
 
 func (p *DevOpsBootcampProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewEngineerDataSource,
+		NewDevDataSource,
 	}
 }
 

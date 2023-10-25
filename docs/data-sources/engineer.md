@@ -23,3 +23,4 @@ Engineer data source
 ### Read-Only
 
 - `id` (String) Example identifier
+- `last_updated` (String)

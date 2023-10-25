@@ -24,7 +24,7 @@ resource: engineer-resource dev-resource ops-resource devops-resource
 datasource: engineer-datasource dev-datasource ops-datasource devops-datasource
 
 generate: main.go
-	@go $@ &> /dev/null
+	@go $@
 
 fmt: main.tf
 	terraform $@
