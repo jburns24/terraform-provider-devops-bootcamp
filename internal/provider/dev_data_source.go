@@ -44,7 +44,7 @@ func (d *DevDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			},
 			"engineers": schema.ListNestedAttribute{
 				MarkdownDescription: "List of engineers in the developer group by id",
-				Optional:            true,
+				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
@@ -66,9 +66,9 @@ func (d *DevDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Computed:            true,
 				MarkdownDescription: "Dev identifier",
 			},
-			"last_updated": schema.StringAttribute{
-				Computed: true,
-			},
+			// "last_updated": schema.StringAttribute{
+			// 	Computed: true,
+			// },
 		},
 	}
 }
