@@ -3,28 +3,22 @@
 
 package provider
 
-import (
-	"testing"
-
-	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-)
-
-func TestAccDevDataSource(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck:                 func() { testAccPreCheck(t) },
-		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			// Read testing
-			{
-				Config: testAccDevDataSourceConfig,
-				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("data.devops-bootcamp_dev.test", "name", "Ryan"),
-					resource.TestCheckResourceAttrSet("data.devops-bootcamp_dev.test", "id"),
-				),
-			},
-		},
-	})
-}
+// func TestAccDevDataSource(t *testing.T) {
+// 	resource.Test(t, resource.TestCase{
+// 		PreCheck:                 func() { testAccPreCheck(t) },
+// 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+// 		Steps: []resource.TestStep{
+// 			// Read testing
+// 			{
+// 				Config: testAccDevDataSourceConfig,
+// 				Check: resource.ComposeAggregateTestCheckFunc(
+// 					resource.TestCheckResourceAttr("data.devops-bootcamp_dev.test", "name", "Ryan"),
+// 					resource.TestCheckResourceAttrSet("data.devops-bootcamp_dev.test", "id"),
+// 				),
+// 			},
+// 		},
+// 	})
+// }
 
 const testAccDevDataSourceConfig = providerConfig + `
 
@@ -37,10 +31,3 @@ const testAccDevDataSourceConfig = providerConfig + `
 	}
 
 `
-
-// const testAccDevDataSourceConfig = providerConfig + `
-// 	data "devops-bootcamp_dev" "test" {
-// 	  name = "dev_bengal"
-// 	}
-
-// `

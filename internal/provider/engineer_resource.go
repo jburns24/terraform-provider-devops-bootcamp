@@ -110,7 +110,7 @@ func (r *EngineerResource) Create(ctx context.Context, req resource.CreateReques
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log
-	tflog.Trace(ctx, "created a resource")
+	tflog.Trace(ctx, "created an engineer resource")
 
 	// Explicitly setting the id
 

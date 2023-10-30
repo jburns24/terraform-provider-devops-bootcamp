@@ -53,11 +53,11 @@ func (r *DevResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 			},
 			"engineers": schema.ListNestedAttribute{
 				MarkdownDescription: "List of engineers in the developer group by id",
-				Optional:            true,
+				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							Computed: true,
+							Optional: true,
 						},
 						"name": schema.StringAttribute{
 							Computed: true,
@@ -103,33 +103,59 @@ func (r *DevResource) Configure(ctx context.Context, req resource.ConfigureReque
 }
 
 func (r *DevResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data *DevResourceModel
-
+	var planned *DevResourceModel
 	// Read Terraform plan data into the model
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &planned)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	// If applicable, this is a great opportunity to initialize any necessary
-	// provider client data and make a call using it.
-	// httpResp, err := r.client.Do(httpReq)
-	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create example, got error: %s", err))
-	//     return
-	// }
+	// Generate API request body from plan
+	var reqObj devops_resource.Dev
+	reqObj.Name = planned.Name.ValueString()
+	for _, engineer := range planned.Engineers {
+		reqObj.Engineers = append(reqObj.Engineers, &devops_resource.Engineer{
+			Id: engineer.Id.ValueString(),
+			// Name:  engineer.Name.ValueString(),
+			// Email: engineer.Email.ValueString(),
+		})
+	}
 
-	// For the purposes of this example code, hardcoding a response value to
-	// save into the Terraform state.
-	data.Id = types.StringValue("example-id")
+	// Make empty list if no engineers are provided
+	if reqObj.Engineers == nil {
+		reqObj.Engineers = make([]*devops_resource.Engineer, 0)
+	}
+
+	dev, err := r.client.CreateDev(&reqObj)
+
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error creating dev",
+			"Could not create dev,unexpected error:"+err.Error(),
+		)
+		return
+	}
+
+	// Map the response to the planned model
+	planned.Id = types.StringValue(dev.Id)
+	planned.Name = types.StringValue(dev.Name)
+	planned.Engineers = []EngineerModel{}
+
+	for _, engineer := range dev.Engineers {
+		planned.Engineers = append(planned.Engineers, EngineerModel{
+			Id:    types.StringValue(engineer.Id),
+			Name:  types.StringValue(engineer.Name),
+			Email: types.StringValue(engineer.Email),
+		})
+	}
 
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log
-	tflog.Trace(ctx, "created a resource")
+	tflog.Trace(ctx, "created a dev resource")
 
 	// Save data into Terraform state
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &planned)...)
 }
 
 func (r *DevResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
@@ -169,25 +195,60 @@ func (r *DevResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 }
 
 func (r *DevResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data *DevResourceModel
+	var planned *DevResourceModel
 
 	// Read Terraform plan data into the model
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &planned)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	// If applicable, this is a great opportunity to initialize any necessary
-	// provider client data and make a call using it.
-	// httpResp, err := r.client.Do(httpReq)
-	// if err != nil {
-	//     resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update example, got error: %s", err))
-	//     return
-	// }
+	// Generate API request body from plan
+	var reqObj devops_resource.Dev
+	reqObj.Id = planned.Id.ValueString()
+	reqObj.Name = planned.Name.ValueString()
+	for _, engineer := range planned.Engineers {
+		reqObj.Engineers = append(reqObj.Engineers, &devops_resource.Engineer{
+			Id:    engineer.Id.ValueString(),
+			Name:  engineer.Name.ValueString(),
+			Email: engineer.Email.ValueString(),
+		})
+	}
+
+	// update the dev
+	_, err := r.client.UpdateDev(&reqObj)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error updating dev",
+			"Could not update dev,unexpected error:"+err.Error(),
+		)
+		return
+	}
+
+	// Fetch the updated dev from the API
+	dev, err := r.client.GetDevById(planned.Id.ValueString())
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read example, got error: %s", err))
+		return
+	}
+
+	// Update the planned model with the updated dev
+	planned.Id = types.StringValue(dev.Id)
+	planned.Name = types.StringValue(dev.Name)
+	planned.Engineers = []EngineerModel{}
+	for _, engineer := range dev.Engineers {
+		planned.Engineers = append(planned.Engineers, EngineerModel{
+			Id:    types.StringValue(engineer.Id),
+			Name:  types.StringValue(engineer.Name),
+			Email: types.StringValue(engineer.Email),
+		})
+	}
+
+	tflog.Trace(ctx, "updated a dev resource")
 
 	// Save updated data into Terraform state
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &planned)...)
 }
 
 func (r *DevResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
