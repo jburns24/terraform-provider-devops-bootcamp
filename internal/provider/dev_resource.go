@@ -6,6 +6,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -32,9 +33,10 @@ type DevResource struct {
 
 // DevResourceModel describes the resource data model.
 type DevResourceModel struct {
-	Id        types.String    `tfsdk:"id"`
-	Name      types.String    `tfsdk:"name"`
-	Engineers []EngineerModel `tfsdk:"engineers"`
+	Id          types.String    `tfsdk:"id"`
+	Name        types.String    `tfsdk:"name"`
+	Engineers   []EngineerModel `tfsdk:"engineers"`
+	LastUpdated types.String    `tfsdk:"last_updated"`
 }
 
 func (r *DevResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -77,6 +79,9 @@ func (r *DevResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
+			},
+			"last_updated": schema.StringAttribute{
+				Computed: true,
 			},
 		},
 	}
@@ -140,6 +145,7 @@ func (r *DevResource) Create(ctx context.Context, req resource.CreateRequest, re
 	// Map the response to the planned model
 	planned.Id = types.StringValue(dev.Id)
 	planned.Name = types.StringValue(dev.Name)
+	planned.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 	planned.Engineers = []EngineerModel{}
 
 	for _, engineer := range dev.Engineers {
@@ -236,6 +242,7 @@ func (r *DevResource) Update(ctx context.Context, req resource.UpdateRequest, re
 	// Update the planned model with the updated dev
 	planned.Id = types.StringValue(dev.Id)
 	planned.Name = types.StringValue(dev.Name)
+	planned.LastUpdated = types.StringValue(time.Now().Format(time.RFC850))
 	planned.Engineers = []EngineerModel{}
 	for _, engineer := range dev.Engineers {
 		planned.Engineers = append(planned.Engineers, EngineerModel{

@@ -28,6 +28,13 @@ type DevDataSource struct {
 	client *Client
 }
 
+type DevModel struct {
+	Id          types.String    `tfsdk:"id"`
+	Name        types.String    `tfsdk:"name"`
+	Engineers   []EngineerModel `tfsdk:"engineers"`
+	LastUpdated types.String    `tfsdk:"last_updated"`
+}
+
 func (d *DevDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_dev"
 }
@@ -66,9 +73,9 @@ func (d *DevDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Computed:            true,
 				MarkdownDescription: "Dev identifier",
 			},
-			// "last_updated": schema.StringAttribute{
-			// 	Computed: true,
-			// },
+			"last_updated": schema.StringAttribute{
+				Computed: true,
+			},
 		},
 	}
 }
