@@ -47,14 +47,44 @@ resource "devops-bootcamp_engineer" "test_engineer" {
 	name  = "Bobby"
 	email = "bobby@bobby.com"
 }
-resource "devops-bootcamp_dev" "test_dev" {
-	name  = "Bangle"
+resource "devops-bootcamp_dev" "test" {
+	name  = "updatedBobby"
 	engineers = [ {id = devops-bootcamp_engineer.test_engineer.id} ]
 }
 			`,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("devops-bootcamp_dev.test_dev", "name", "Bangle"),
-					resource.TestCheckResourceAttrSet("devops-bootcamp_dev.test_dev", "id"),
+					resource.TestCheckResourceAttr("devops-bootcamp_dev.test", "name", "updatedBobby"),
+					resource.TestCheckResourceAttrSet("devops-bootcamp_dev.test", "id"),
+					resource.TestCheckResourceAttr("devops-bootcamp_dev.test", "engineers.#", "1"),
+					resource.TestCheckResourceAttrPair("devops-bootcamp_dev.test", "engineers.0.id", "devops-bootcamp_engineer.test_engineer", "id"),
+					resource.TestCheckResourceAttrPair("devops-bootcamp_dev.test", "engineers.0.name", "devops-bootcamp_engineer.test_engineer", "name"),
+				),
+			},
+			// Add a second engineer
+			{
+
+				Config: providerConfig + `
+resource "devops-bootcamp_engineer" "test_engineer" {
+	name  = "Bobby"
+	email = "bobby@bobby.com"
+}
+resource "devops-bootcamp_engineer" "test_engineer2" {
+	name  = "BobbysBrother"
+	email = "bobbysBrother@bobby.com"
+}
+resource "devops-bootcamp_dev" "test" {
+	name  = "updatedBobby"
+	engineers = [ {id = devops-bootcamp_engineer.test_engineer.id}, {id = devops-bootcamp_engineer.test_engineer2.id} ]
+}
+			`,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("devops-bootcamp_dev.test", "name", "updatedBobby"),
+					resource.TestCheckResourceAttrSet("devops-bootcamp_dev.test", "id"),
+					resource.TestCheckResourceAttr("devops-bootcamp_dev.test", "engineers.#", "2"),
+					resource.TestCheckResourceAttrPair("devops-bootcamp_dev.test", "engineers.0.id", "devops-bootcamp_engineer.test_engineer", "id"),
+					resource.TestCheckResourceAttrPair("devops-bootcamp_dev.test", "engineers.0.name", "devops-bootcamp_engineer.test_engineer", "name"),
+					resource.TestCheckResourceAttrPair("devops-bootcamp_dev.test", "engineers.1.id", "devops-bootcamp_engineer.test_engineer2", "id"),
+					resource.TestCheckResourceAttrPair("devops-bootcamp_dev.test", "engineers.1.name", "devops-bootcamp_engineer.test_engineer2", "name"),
 				),
 			},
 			// Delete testing automatically occurs in TestCase
